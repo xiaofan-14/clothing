@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, MoreHorizontal, Minus, Plus, Ellipsis } from "lucide-vue-next"
+import { CircleEqual, Minus, Plus, Ellipsis } from "lucide-vue-next"
 import { ref, computed } from "vue"
 
 const cartItems = ref([
@@ -21,10 +21,6 @@ const cartItems = ref([
   },
 ])
 
-function goBack() {
-  window.history.back()
-}
-
 const totalItems = computed(() => {
   return cartItems.value.reduce((sum, item) => sum + item.quantity, 0);
 });
@@ -37,22 +33,19 @@ const totalPrice = computed(() => {
 </script>
 
 <template>
-  <header class="bg-white px-4 py-4 flex items-center justify-between shadow-sm">
-    <button @click="goBack" class="w-8 h-8 flex items-center justify-center">
-      <ArrowLeft class="w-5 h-5 text-gray-700" />
+  <header class="bg-white px-4 py-4 flex items-center justify-between">
+    <button  class="w-8 h-8 flex items-center justify-center">
     </button>
     <h1 class="text-lg font-semibold text-gray-900">Checkout</h1>
     <button class="w-8 h-8 flex items-center justify-center">
-      <MoreHorizontal class="w-5 h-5 text-gray-700" />
+      <CircleEqual class="w-5 h-5 text-gray-700" />
     </button>
   </header>
 
   <!-- Cart Items -->
-  <div class="p-4 space-y-4">
+  <div class="px-4 space-y-4">
     <div v-for="item in cartItems" :key="item.id" class="p-4 flex items-center gap-4">
-      <div class="container">
-        <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded-md" />
-      </div>
+      <img :src="item.image" :alt="item.name" class="w-20 h-20 object-cover rounded-2xl" />
 
       <!-- Info -->
       <div class="flex-1">
@@ -65,7 +58,7 @@ const totalPrice = computed(() => {
       <div class="flex flex-col items-end gap-2">
         <!-- More -->
         <button class="w-8 h-8 flex items-center justify-center">
-          <Ellipsis class="w-5 h-5 text-gray-400" />
+          <Ellipsis class="w-5 h-5 text-gray-800" />
         </button>
 
         <!-- Quantity -->
@@ -84,7 +77,7 @@ const totalPrice = computed(() => {
 
   <!-- Payment Info -->
   <div class="p-4">
-    <div class="bg-white rounded-lg p-4 mb-4">
+    <!-- <div class="bg-white rounded-lg p-4 mb-4">
       <h3 class="font-medium text-gray-900 mb-4">Shipping Information</h3>
       <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
         <div class="flex items-center gap-3">
@@ -93,10 +86,10 @@ const totalPrice = computed(() => {
         </div>
         <i class="fas fa-chevron-down text-gray-400"></i>
       </div>
-    </div>
+    </div> -->
 
     <!-- Order Summary -->
-    <div class="bg-white rounded-lg p-4">
+    <div class="p-4 border-t border-gray-200">
       <div class="space-y-3 mb-4">
         <div class="flex justify-between">
           <span class="text-gray-600">Total ({{ totalItems }} items)</span>
@@ -110,8 +103,7 @@ const totalPrice = computed(() => {
           <span class="text-gray-600">Discount</span>
           <span class="font-medium">$0.00</span>
         </div>
-        <hr class="my-3" />
-        <div class="flex justify-between text-lg font-semibold">
+        <div class="flex justify-between text-lg font-semibold border-t border-gray-700 pt-2">
           <span>Sub Total</span>
           <span>${{ totalPrice }}</span>
         </div>
@@ -123,18 +115,3 @@ const totalPrice = computed(() => {
     </div>
   </div>
 </template>
-
-
-<style>
-.container {
-/* Cart View */
-
-position: absolute;
-width: 375px;
-height: 408px;
-left: calc(50% - 375px/2);
-top: 0px;
-
-background: #FFFFFF;
-}
-</style>

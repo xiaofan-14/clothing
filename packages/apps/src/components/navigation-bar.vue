@@ -17,7 +17,7 @@ const bottomTabs = ref<Tab[]>([
   { id: 1, icon: House, active: true, to: '/' },
   { id: 2, icon: ShoppingCart, badge: 2, active: false, to: '/checkout' },
   { id: 3, icon: Heart, active: false, to: '/' },
-  { id: 4, icon: UserRound, active: false, to: '/' },
+  { id: 4, icon: UserRound, active: false, to: '/me' },
 ])
 
 function setActiveTab(tabId: number) {

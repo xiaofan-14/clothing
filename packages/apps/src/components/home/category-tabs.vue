@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { markRaw, reactive } from "vue";
 import { All, Dress, TShirt, Jeans } from "../icons";
 
 const categories = reactive([
-  { id: 'nav1', name: "All", icon: All, active: true },
-  { id: 'nav2', name: "Dress", icon: Dress, active: false },
-  { id: 'nav3', name: "T-Shirt", icon: TShirt, active: false },
-  { id: 'nav4', name: "Jeans", icon: Jeans, active: false },
+  { id: 'nav1', name: "All", icon: markRaw(All), active: true },
+  { id: 'nav2', name: "Dress", icon: markRaw(Dress), active: false },
+  { id: 'nav3', name: "T-Shirt", icon: markRaw(TShirt), active: false },
+  { id: 'nav4', name: "Jeans", icon: markRaw(Jeans), active: false },
 ])
 
 function setActiveCategory(id: string) {

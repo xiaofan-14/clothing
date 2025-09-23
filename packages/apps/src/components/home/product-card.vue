@@ -1,16 +1,27 @@
 <script setup lang="ts">
 import type { Product } from "@/pages/index.vue";
 import { Heart, Star } from "lucide-vue-next"
+import { useRouter } from "vue-router";
 
 defineProps<{ product: Product }>()
+
+const router = useRouter();
+
+function toDetail(id: number){
+  router.push(`/${id}`);
+}
+
+function star(){
+  console.log('star');
+}
 </script>
 
 <template>
-  <div class="overflow-hidden transition-shadow cursor-pointer">
+  <div @click="toDetail(product.id)" class="overflow-hidden transition-shadow cursor-pointer">
     <div class="relative aspect-[3/4] bg-gradient-to-br">
       <img :src="product.image" :alt="product.name" class="w-full h-full object-cover rounded-3xl" />
       <button class="absolute top-3 right-3 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
-        <Heart class="text-gray-600 w-4 h-4" />
+        <Heart class="text-gray-600 w-4 h-4" @click.stop="star" />
         <!-- 点击 Heart 样式 fill-red-500 text-red-500 -->
       </button>
     </div>

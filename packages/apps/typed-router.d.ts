@@ -19,9 +19,9 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/[id]/': RouteRecordInfo<'/[id]/', '/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/checkout': RouteRecordInfo<'/checkout', '/checkout', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
-    '/product': RouteRecordInfo<'/product', '/product', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -39,16 +39,16 @@ declare module 'vue-router/auto-routes' {
       routes: '/'
       views: never
     }
+    'src/pages/[id]/index.vue': {
+      routes: '/[id]/'
+      views: never
+    }
     'src/pages/checkout.vue': {
       routes: '/checkout'
       views: never
     }
     'src/pages/login.vue': {
       routes: '/login'
-      views: never
-    }
-    'src/pages/product.vue': {
-      routes: '/product'
       views: never
     }
   }

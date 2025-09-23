@@ -1,0 +1,19 @@
+{
+  "name": "@clothing/monorepo",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "dependencies": {
+    "@clothing/apps": "workspace:*",
+    "@clothing/servers": "workspace:*"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}

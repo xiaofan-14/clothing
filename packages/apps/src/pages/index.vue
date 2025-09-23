@@ -3,6 +3,7 @@ import HeaderBar from "@/components/home/header-bar.vue"
 import SearchBar from "@/components/home/search-bar.vue"
 import CategoryTabs from "@/components/home/category-tabs.vue"
 import ProductCard from "@/components/home/product-card.vue"
+import navigationBar from "@/components/navigation-bar.vue"
 
 export interface Product {
   id: number
@@ -68,4 +69,5 @@ const products: Product[] = [
       <ProductCard v-for="p in products" :key="p.id" :product="p" />
     </div>
   </div>
+  <navigation-bar />
 </template>

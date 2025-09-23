@@ -21,8 +21,10 @@ declare module 'vue-router/auto-routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[id]/': RouteRecordInfo<'/[id]/', '/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/checkout': RouteRecordInfo<'/checkout', '/checkout', Record<never, never>, Record<never, never>>,
+    '/favorites': RouteRecordInfo<'/favorites', '/favorites', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
     '/me': RouteRecordInfo<'/me', '/me', Record<never, never>, Record<never, never>>,
+    '/order': RouteRecordInfo<'/order', '/order', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -48,12 +50,20 @@ declare module 'vue-router/auto-routes' {
       routes: '/checkout'
       views: never
     }
+    'src/pages/favorites.vue': {
+      routes: '/favorites'
+      views: never
+    }
     'src/pages/login.vue': {
       routes: '/login'
       views: never
     }
     'src/pages/me.vue': {
       routes: '/me'
+      views: never
+    }
+    'src/pages/order.vue': {
+      routes: '/order'
       views: never
     }
   }

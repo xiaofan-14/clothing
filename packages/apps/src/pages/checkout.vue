@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleEqual, Minus, Plus, Ellipsis } from "lucide-vue-next"
+import { CircleEqual, Minus, Plus, CircleX  } from "lucide-vue-next"
 import { ref, computed } from "vue"
 
 const cartItems = ref([
@@ -56,9 +56,8 @@ const totalPrice = computed(() => {
 
       <!-- Quantity -->
       <div class="flex flex-col items-end gap-2">
-        <!-- More -->
         <button class="w-8 h-8 flex items-center justify-center">
-          <Ellipsis class="w-5 h-5 text-gray-800" />
+          <CircleX  class="w-5 h-5 text-gray-800" />
         </button>
 
         <!-- Quantity -->

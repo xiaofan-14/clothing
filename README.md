@@ -46,3 +46,9 @@ clothing/
 ```sh
 npx prisma db push
 ```
+
+生成类型
+
+```sh
+npx prisma generate
+```

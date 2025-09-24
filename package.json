@@ -9,9 +9,6 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
-  "prisma": {
-    "schema": "prisma/schema.prisma"
-  },
   "dependencies": {
     "@clothing/apps": "workspace:*",
     "@clothing/servers": "workspace:*"

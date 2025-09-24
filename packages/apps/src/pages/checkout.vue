@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { CircleEqual, Minus, Plus, CircleX } from "lucide-vue-next"
+import { CircleEqual, Minus, Plus, CircleX, Package } from "lucide-vue-next"
 import NavigationBar from "@/components/navigation-bar.vue"
 import { trpc } from "@/lib/trpc";
 import { useAuthStore } from "@/stores/auth";
@@ -114,6 +114,10 @@ function removeItem(itemId: string) {
 // }
 
 function pay() {
+  if(list.value.length <= 0) {
+    toast('还没有商品, 去选购吧', 'info')
+    return
+  }
   const items = list.value.map(({ productId, quantity }) => ({ productId, quantity }))
   createOrderMutation.mutate(items)
 }
@@ -158,6 +162,11 @@ function pay() {
           </button>
         </div>
       </div>
+    </div>
+
+    <div v-if="list && list!.length === 0" class="text-center py-10 text-gray-400">
+      <Package class="mx-auto w-12 h-12 mb-2" />
+      <p>暂无商品</p>
     </div>
   </div>
 

@@ -9,17 +9,19 @@ import {
   ShoppingCartIcon,
 } from 'lucide-vue-next'
 import { useRoute } from "vue-router";
-import { useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { url } from "@/utils/url";
 import { useRouter } from 'vue-router';
 import { useToast } from '@/composables/useToast';
 import { trpc } from '@/lib/trpc';
 import type { Product } from '@clothing/servers/type';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const router = useRouter()
-
 const { toast } = useToast()
+const authStore = useAuthStore()
+
 const id = route.params.id as string
 
 const { data } = useQuery<Product>({
@@ -34,6 +36,18 @@ const { data } = useQuery<Product>({
   },
   enabled: !!id
 });
+
+const { mutate } = useMutation({
+  mutationFn: async (data: { productId: string; quantity: number; userId: string }) =>
+    trpc.cart.addItem.mutate(data),
+  onSuccess: (item) => {
+    toast('已加入购物车', 'success')
+    console.log('新增/更新的购物车条目:', item)
+  },
+  onError: (err) => {
+    toast(`添加失败: ${err.message}`, 'error')
+  },
+})
 
 const quantity = ref(1)
 const selectedSize = ref('L')
@@ -60,24 +74,25 @@ function decreaseQuantity() {
   }
 }
 
-const auth = ref(false)
-
 function addToCart() {
-  if (!auth.value) {
+  if (!authStore.token || !authStore.user) {
     toast('请先登录', 'info')
     router.push('/signin')
-  } else {
-    // 添加到购物车逻辑
-    console.log('Adding to cart:', {
-      product: data.value,
-      quantity: quantity.value,
-      size: selectedSize.value,
-      color: selectedColor.value
-    })
-    toast('已加入购物车', 'success')
+    return
   }
-}
 
+  if (!data.value) return
+
+  const payload = {
+    userId: authStore.user.id,
+    productId: data.value.id,
+    quantity: quantity.value || 1,
+  }
+
+  console.log('Adding to cart:', payload)
+
+  mutate(payload)
+}
 </script>
 
 <template>

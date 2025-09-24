@@ -9,17 +9,29 @@ export function useCookie<T = string>(key: string): UseCookieReturn<T> {
     if (typeof document === 'undefined') return null
     const cookies = document.cookie.split('; ').reduce((acc, cur) => {
       const [k, v] = cur.split('=')
-      acc[k!] = decodeURIComponent(v!)
+      if (k && v) acc[k] = decodeURIComponent(v)
       return acc
     }, {} as Record<string, string>)
-    return (cookies[key] as unknown as T) || null
+
+    const value = cookies[key]
+    if (!value) return null
+
+    try {
+      // 尝试解析 JSON，如果失败就返回原字符串
+      return JSON.parse(value) as T
+    } catch {
+      return value as unknown as T
+    }
   }
 
   const set = (value: T, options: { days?: number; path?: string } = {}) => {
     if (typeof document === 'undefined') return
     const { days = 7, path = '/' } = options
     const expires = new Date(Date.now() + days * 864e5).toUTCString()
-    document.cookie = `${key}=${encodeURIComponent(String(value))}; expires=${expires}; path=${path}`
+
+    // 如果是对象或数组就序列化
+    const str = typeof value === 'string' ? value : JSON.stringify(value)
+    document.cookie = `${key}=${encodeURIComponent(str)}; expires=${expires}; path=${path}`
   }
 
   const remove = () => {

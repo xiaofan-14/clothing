@@ -2,11 +2,9 @@
 import { computed, markRaw, type Component } from "vue";
 import { All, Dress, TShirt, Jeans } from "../icons";
 import { useQuery } from "@tanstack/vue-query"
-import { useFetch } from "@/hooks/useFetch"
-import type { Category } from "@clothing/servers/type";
+import { trpc } from "@/lib/trpc";
 
 const active = defineModel<string>('active')
-
 
 function setActiveCategory(id: string) {
   active.value = id
@@ -20,7 +18,7 @@ const categoryIconMap: Record<string, Component> = {
 
 const { data: remoteList } = useQuery({
   queryKey: ['category'],
-  queryFn: () => useFetch<Category[]>('/category.getlist'),
+  queryFn: async () => await trpc.category.getlist.query(),
 });
 
 const categories = computed(() =>

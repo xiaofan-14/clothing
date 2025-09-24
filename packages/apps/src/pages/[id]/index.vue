@@ -9,27 +9,35 @@ import {
   ShoppingCartIcon,
 } from 'lucide-vue-next'
 import { useRoute } from "vue-router";
-import type { ProductClient } from '../index.vue';
-import { useFetch } from '@/hooks/useFetch';
 import { useQuery } from '@tanstack/vue-query';
 import { url } from "@/utils/url";
 import { useRouter } from 'vue-router';
+import { useToast } from '@/composables/useToast';
+import { trpc } from '@/lib/trpc';
+import type { Product } from '@clothing/servers/type';
 
 const route = useRoute();
 const router = useRouter()
 
-const id = route.params.id;
+const { toast } = useToast()
+const id = route.params.id as string
 
-
-const { data } = useQuery({
-  queryKey: ['product', 'detail'],
-  queryFn: () => useFetch<ProductClient>(`/product.getById?input=${encodeURIComponent(JSON.stringify({ id }))}`),
+const { data } = useQuery<Product>({
+  queryKey: ['product', id],
+  queryFn: async () => {
+    const product = await trpc.product.getById.query({ id: id });
+    if (!product) throw new Error('Product not found');
+    return {
+      ...product,
+      createdAt: new Date(product.createdAt as string),
+    };
+  },
   enabled: !!id
 });
 
 const quantity = ref(1)
 const selectedSize = ref('L')
-const selectedColor = ref('black')
+const selectedColor = ref('gray')
 
 const sizes = ['S', 'M', 'L', 'XL']
 const colors = [
@@ -38,29 +46,38 @@ const colors = [
   { name: 'black', value: '#111827' }
 ] as Array<{ name: string; value: string }>
 
-async function goBack() {
-  await router.back()
+function goBack() {
+  router.back()
 }
 
-const increaseQuantity = () => {
+function increaseQuantity() {
   quantity.value++
 }
 
-const decreaseQuantity = () => {
+function decreaseQuantity() {
   if (quantity.value > 1) {
     quantity.value--
   }
 }
 
-const addToCart = () => {
-  // 添加到购物车逻辑
-  // console.log('Adding to cart:', {
-  //   product: selectedProduct,
-  //   quantity: quantity.value,
-  //   size: selectedSize.value,
-  //   color: selectedColor.value
-  // })
+const auth = ref(false)
+
+function addToCart() {
+  if (!auth.value) {
+    toast('请先登录', 'info')
+    router.push('/signin')
+  } else {
+    // 添加到购物车逻辑
+    console.log('Adding to cart:', {
+      product: data.value,
+      quantity: quantity.value,
+      size: selectedSize.value,
+      color: selectedColor.value
+    })
+    toast('已加入购物车', 'success')
+  }
 }
+
 </script>
 
 <template>
@@ -159,11 +176,7 @@ const addToCart = () => {
       <button @click="addToCart()"
         class="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-full font-semibold flex items-center justify-center mb-8 transition-all duration-200 shadow-lg hover:shadow-xl">
         <ShoppingCartIcon class="w-5 h-5 mr-3" />
-        <!-- <span>Add to Cart | ${{ data.price }}</span>
-      <span class="ml-2 text-gray-400 line-through text-sm">
-        ${{ selectedProduct.originalPrice }}
-      </span> -->
-        123
+        <span>Add to Cart | ${{ data.price }}</span>
       </button>
     </div>
   </div>

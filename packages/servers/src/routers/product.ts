@@ -31,6 +31,23 @@ export const productRouter = t.router({
           }
         }
       })
+    }),
+  getByCategory: t.procedure
+    .input(z.object({
+      categoryId: z.string()
+    }))
+    .query(async ({ input, ctx }) => {
+      return await ctx.db.product.findMany({
+        where: { categoryId: input.categoryId },
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          }
+        }
+      })
     })
 })
 

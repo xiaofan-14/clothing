@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, markRaw, ref, type Component } from "vue";
+import { computed, markRaw, type Component } from "vue";
 import { All, Dress, TShirt, Jeans } from "../icons";
 import { useQuery } from "@tanstack/vue-query"
 import { useFetch } from "@/hooks/useFetch"
 import type { Category } from "@clothing/servers/type";
 
-const active = ref('all')
+const active = defineModel<string>('active')
+
 
 function setActiveCategory(id: string) {
   active.value = id

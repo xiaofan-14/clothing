@@ -1,4 +1,4 @@
-import { t } from "./trpc";
+import { t } from "../trpc";
 import { signin, signup, signout } from "../services/auth";
 import z from "zod";
 

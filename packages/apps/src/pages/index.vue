@@ -58,6 +58,7 @@ const products: Product[] = [
     image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=500&fit=crop'
   }
 ]
+
 </script>
 
 <template>

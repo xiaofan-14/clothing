@@ -1,30 +1,57 @@
 <script setup lang="ts">
-import { markRaw, reactive } from "vue";
+import { computed, markRaw, ref, type Component } from "vue";
 import { All, Dress, TShirt, Jeans } from "../icons";
+import { useQuery } from "@tanstack/vue-query"
+import { useFetch } from "@/hooks/useFetch"
+import type { Category } from "@clothing/servers/type";
 
-const categories = reactive([
-  { id: 'nav1', name: "All", icon: markRaw(All), active: true },
-  { id: 'nav2', name: "Dress", icon: markRaw(Dress), active: false },
-  { id: 'nav3', name: "T-Shirt", icon: markRaw(TShirt), active: false },
-  { id: 'nav4', name: "Jeans", icon: markRaw(Jeans), active: false },
-])
+const active = ref('all')
 
 function setActiveCategory(id: string) {
-  categories.forEach((c) => (c.active = c.id === id));
+  active.value = id
 }
+
+const categoryIconMap: Record<string, Component> = {
+  Dress,
+  'T-Shirt': TShirt,
+  Jeans,
+};
+
+const { data: remoteList } = useQuery({
+  queryKey: ['category'],
+  queryFn: () => useFetch<Category[]>('/category.getlist'),
+});
+
+/* 2. 计算属性：把后端字段拼上图标 */
+const categories = computed(() =>
+  (remoteList.value || []).map(item => ({
+    ...item,
+    icon: markRaw(categoryIconMap[item.name] ?? All),
+  }))
+);
+
 </script>
 
 <template>
   <div class="px-4 py-4">
     <div class="flex gap-4 overflow-x-auto scrollbar-hide">
-      <button v-for="category in categories" :key="category.id" @click="setActiveCategory(category.id)" :class="[
+      <button @click="setActiveCategory('all')" :class="[
         'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap',
-        category.active
+        active === 'all'
           ? 'bg-gray-900 text-white'
           : 'text-gray-600 hover:bg-gray-200 border-gray-200 border',
       ]">
-        <component :is="category.icon" class="w-4 h-4" :stroke="category.active ? 'white' : '#292526'" />
-        <span class="text-sm">{{ category.name }}</span>
+        <component :is="All" class="w-4 h-4" :stroke="active === 'all' ? 'white' : '#292526'" />
+        <span class="text-sm">全部</span>
+      </button>
+      <button v-for="item in categories" :key="item.id" @click="setActiveCategory(item.id)" :class="[
+        'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap',
+        active === item.id
+          ? 'bg-gray-900 text-white'
+          : 'text-gray-600 hover:bg-gray-200 border-gray-200 border',
+      ]">
+        <component :is="item.icon" class="w-4 h-4" :stroke="active === item.id ? 'white' : '#292526'" />
+        <span class="text-sm">{{ item.name }}</span>
       </button>
     </div>
   </div>

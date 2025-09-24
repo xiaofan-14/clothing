@@ -2,12 +2,16 @@ import type {
   Category,
   Product,
   User,
-  CartItem
+  CartItem,
+  Order,
+  OrderItem
 } from '@prisma/client'
 
 export {
   Category,
   Product,
   User,
-  CartItem
+  CartItem,
+  Order,
+  OrderItem
 }

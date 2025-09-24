@@ -3,12 +3,14 @@ import { authRouter } from "./auth";
 import { categoryRouter } from "./category";
 import { productRouter } from './product';
 import { cartRouter } from './cart';
+import { orderRouter } from './order'
 
 export const appRouter = t.router({
   auth: authRouter,
   category: categoryRouter,
   product: productRouter,
-  cart: cartRouter
+  cart: cartRouter,
+  order: orderRouter
 });
 
 export type AppRouter = typeof appRouter;

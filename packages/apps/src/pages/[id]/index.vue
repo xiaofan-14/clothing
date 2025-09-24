@@ -40,9 +40,8 @@ const { data } = useQuery<Product>({
 const { mutate } = useMutation({
   mutationFn: async (data: { productId: string; quantity: number; userId: string }) =>
     trpc.cart.addItem.mutate(data),
-  onSuccess: (item) => {
+  onSuccess: () => {
     toast('已加入购物车', 'success')
-    console.log('新增/更新的购物车条目:', item)
   },
   onError: (err) => {
     toast(`添加失败: ${err.message}`, 'error')
@@ -88,8 +87,6 @@ function addToCart() {
     productId: data.value.id,
     quantity: quantity.value || 1,
   }
-
-  console.log('Adding to cart:', payload)
 
   mutate(payload)
 }

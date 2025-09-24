@@ -51,18 +51,34 @@ const removeItemMutation = useMutation({
   },
 })
 
-const clearCartMutation = useMutation({
-  mutationFn: async () =>
-    trpc.cart.clear.mutate({
-      userId: user.id,
-    }),
+// const clearCartMutation = useMutation({
+//   mutationFn: async () =>
+//     trpc.cart.clear.mutate({
+//       userId: user.id,
+//     }),
+//   onSuccess: () => {
+//     queryClient.invalidateQueries({ queryKey: ['cart-list'] })
+//     toast('购物车已清空', 'success')
+//   },
+//   onError: (err) => {
+//     toast(`清空失败: ${err.message}`, 'error')
+//   },
+// })
+
+const createOrderMutation = useMutation({
+  mutationFn: async (items: {
+    productId: string;
+    quantity: number
+  }[]) => await trpc.order.create.mutate({
+    userId: user.id,
+    items: items
+  }),
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['cart-list'] })
-    toast('购物车已清空', 'success')
+    toast('支付成功', 'success')
   },
   onError: (err) => {
-    toast(`清空失败: ${err.message}`, 'error')
-  },
+    toast(`支付失败: ${err.message}`, 'error')
+  }
 })
 
 const list = computed(() => data.value?.items ?? [])
@@ -93,8 +109,13 @@ function removeItem(itemId: string) {
   removeItemMutation.mutate(itemId)
 }
 
-function clearCart() {
-  clearCartMutation.mutate()
+// function clearCart() {
+//   clearCartMutation.mutate()
+// }
+
+function pay() {
+  const items = list.value.map(({ productId, quantity }) => ({ productId, quantity }))
+  createOrderMutation.mutate(items)
 }
 </script>
 
@@ -163,7 +184,7 @@ function clearCart() {
         </div>
       </div>
 
-      <button class="w-full bg-gray-900 text-white py-4 rounded-full font-medium">
+      <button @click="pay" class="w-full bg-gray-900 text-white py-4 rounded-full font-medium">
         支付
       </button>
     </div>

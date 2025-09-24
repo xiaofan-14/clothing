@@ -20,24 +20,6 @@ model User {
   cart      Cart? // 用户购物车（一个用户一个购物车）
   orders    Order[] // 用户下的所有订单
   favorites Favorite[] // 用户收藏的商品
-  addresses Address[] // 用户收货地址列表
-}
-
-model Address {
-  id        String  @id @default(cuid()) // 地址 ID，自增
-  fullName  String // 收件人姓名
-  phone     String // 收件人手机号
-  province  String // 省份
-  city      String // 城市
-  district  String? // 区/县（可选）
-  street    String // 详细街道
-  zipCode   String? // 邮编（可选）
-  isDefault Boolean @default(false) // 是否为默认收货地址
-
-  userId String // 所属用户 ID
-  user   User   @relation(fields: [userId], references: [id]) // 关联用户
-
-  Order Order[]
 }
 
 model Category {
@@ -85,14 +67,11 @@ model CartItem {
 model Order {
   id        String   @id @default(cuid()) // 订单 ID
   total     Float // 订单总金额
-  status    String   @default("pending") // 订单状态（pending/paid/shipped/completed/cancelled）
+  status    String   @default("paid") // 订单状态（pending/paid/shipped/completed/cancelled）
   createdAt DateTime @default(now()) // 下单时间
 
   userId String // 用户 ID
   user   User   @relation(fields: [userId], references: [id]) // 下单用户
-
-  addressId String? // 收货地址 ID（下单时选择）
-  address   Address? @relation(fields: [addressId], references: [id]) // 关联收货地址
 
   items OrderItem[] // 订单包含的商品项
 }

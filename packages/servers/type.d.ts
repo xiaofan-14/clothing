@@ -4,7 +4,8 @@ import type {
   User,
   CartItem,
   Order,
-  OrderItem
+  OrderItem,
+  Favorite
 } from '@prisma/client'
 
 export {
@@ -13,5 +14,6 @@ export {
   User,
   CartItem,
   Order,
-  OrderItem
+  OrderItem,
+  Favorite
 }

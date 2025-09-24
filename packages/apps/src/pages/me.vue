@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import {
+  User,
   Package,
   Ticket,
   Heart,
@@ -54,7 +55,9 @@ onMounted(async () => {
   <div class="min-h-screen bg-gray-50">
     <!-- 顶部用户信息 -->
     <div class="bg-white shadow px-4 py-6 flex items-center gap-4">
-      <img :src="user.avatar" alt="avatar" class="w-16 h-16 rounded-full object-cover" />
+      <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+        <User class="w-5 h-5 text-white" />
+      </div>
       <div>
         <p class="font-semibold text-lg">{{ user.name }}</p>
         <p class="text-sm text-gray-500">{{ user.level }}</p>

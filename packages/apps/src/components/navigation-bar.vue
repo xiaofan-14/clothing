@@ -15,7 +15,7 @@ const route = useRoute()
 
 const bottomTabs = ref<Tab[]>([
   { id: 1, icon: House, to: '/' },
-  { id: 2, icon: ShoppingCart, badge: 2, to: '/checkout' },
+  { id: 2, icon: ShoppingCart, to: '/checkout' },
   { id: 3, icon: Heart, to: '/favorites' },
   { id: 4, icon: UserRound, to: '/me' },
 ])

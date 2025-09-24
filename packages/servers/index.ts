@@ -25,9 +25,8 @@ async function server() {
     "/trpc",
     trpcExpress.createExpressMiddleware({
       router: appRouter,
-      createContext: () => createContext({ db: prisma }),
-    })
-  );
+      createContext
+    }));
 
   // 前端入口
   app.get("/", (_req, res) => {

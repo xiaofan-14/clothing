@@ -3,24 +3,25 @@ import { ref, reactive, computed } from "vue"
 import { useRouter } from "vue-router"
 import bg from "@/assets/login-bg.png"
 import {
-  Mail,
   Lock,
   Eye,
   EyeOff,
   LogIn,
   UserPlus,
+  Phone,
 } from "lucide-vue-next"
 import { Google, Apple, Wechat } from "@/components/icons"
 import { useMutation } from "@tanstack/vue-query"
 import { trpc } from "@/lib/trpc"
 import { useToast } from "@/composables/useToast"
-import { useCookie } from "@/composables/useCookie"
+import { useAuthStore } from "@/stores/auth"
+import type { User } from "@clothing/servers/type"
 
 const BACKGROUND_URL = new URL(bg, import.meta.url).href
 
 const router = useRouter()
 const { toast } = useToast()
-const cookie = useCookie<string>('token')
+const authStore = useAuthStore()
 
 // 表单状态
 const form = reactive({
@@ -31,7 +32,7 @@ const form = reactive({
 const { mutate, isPending } = useMutation({
   mutationFn: async () => await trpc.auth.signin.mutate(form),
   onSuccess: (data) => {
-    cookie.set(data.token, { days: 7 })
+    authStore.setAuth(data.token, data.user as unknown as User)
     toast('登录成功', 'success')
     router.push('/')
   },
@@ -73,7 +74,7 @@ function onSignin() {
         <!-- account -->
         <label class="block">
           <div class="flex items-center text-sm mb-2">
-            <Mail class="w-4 h-4 mr-2" />
+            <Phone class="w-4 h-4 mr-2" />
             手机号
           </div>
           <input v-model="form.phone" type="text" autocomplete="phone"

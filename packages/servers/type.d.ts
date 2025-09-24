@@ -4,10 +4,8 @@ import type {
   User
 } from '@prisma/client'
 
-type UserRpc = User
-
 export {
   Category,
   Product,
-  UserRpc,
+  User,
 }

@@ -3,7 +3,7 @@ import { ref, reactive, computed } from "vue"
 import { useRouter } from "vue-router"
 import bg from "@/assets/login-bg.png"
 import {
-  User,
+  UserRound,
   Phone,
   Lock,
   Eye,
@@ -14,14 +14,15 @@ import {
 import { trpc } from "@/lib/trpc"
 import { useMutation } from "@tanstack/vue-query"
 import { useToast } from "@/composables/useToast"
-import { useCookie } from "@/composables/useCookie"
-
-const cookie = useCookie<string>('token')
+import { useAuthStore } from "@/stores/auth"
+import type { User } from "@clothing/servers/type"
 
 const BACKGROUND_URL = new URL(bg, import.meta.url).href
 
 const router = useRouter()
 const { toast } = useToast()
+
+const authStore = useAuthStore()
 
 const form = reactive({
   phone: "",
@@ -32,7 +33,7 @@ const form = reactive({
 const { mutate, isPending } = useMutation({
   mutationFn: async () => await trpc.auth.signup.mutate(form),
   onSuccess: (data) => {
-    cookie.set(data.token, { days: 7 })
+    authStore.setAuth(data.token, data.user as unknown as User)
     toast('注册成功', 'success')
     router.push('/')
   },
@@ -73,7 +74,7 @@ function onSignup() {
         <!-- 用户昵称 -->
         <label class="block">
           <div class="flex items-center text-sm mb-2">
-            <User class="w-4 h-4 mr-2" />
+            <UserRound class="w-4 h-4 mr-2" />
             昵称
           </div>
           <input v-model="form.name" type="text" autocomplete="nickname"

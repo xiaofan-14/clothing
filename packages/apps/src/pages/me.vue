@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import {
   Package,
   Ticket,
@@ -11,6 +11,7 @@ import {
 } from "lucide-vue-next"
 import NavigationBar from "@/components/navigation-bar.vue"
 import { useRouter } from "vue-router"
+import { useAuthStore } from "@/stores/auth"
 
 const router = useRouter()
 
@@ -35,6 +36,18 @@ const services = [
 function go(to: string){
   router.push(to)
 }
+
+const auth = useAuthStore()
+
+onMounted(async () => {
+  if (auth.token) {
+    try {
+      user.value.name = auth.user!.name
+    } catch {
+      auth.clearAuth()
+    }
+  }
+})
 </script>
 
 <template>

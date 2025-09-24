@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { CircleEqual, Minus, Plus, CircleX  } from "lucide-vue-next"
 import { ref, computed } from "vue"
+import { CircleEqual, Minus, Plus, CircleX  } from "lucide-vue-next"
+import NavigationBar from "@/components/navigation-bar.vue"
 
 const cartItems = ref([
   {
@@ -113,4 +114,6 @@ const totalPrice = computed(() => {
       </button>
     </div>
   </div>
+
+  <navigation-bar />
 </template>

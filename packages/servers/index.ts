@@ -1,10 +1,9 @@
+import * as trpcExpress from "@trpc/server/adapters/express";
 import { initTRPC } from "@trpc/server";
 import z from "zod";
-import * as trpcExpress from "@trpc/server/adapters/express";
-
 import express from "express";
-
 import cors from "cors";
+
 import { createTodo, getTodos, deleteTodo } from "./src/todo";
 const t = initTRPC.create();
 
@@ -16,9 +15,9 @@ const getTodosPayload = z.object({
   filter: z.boolean().optional(),
 });
 const appRouter = t.router({
-  // hello: t.procedure.input(z.string().nullish()).query((req) => {
-  //     return `hello ${req.input}`
-  // }),
+  hello: t.procedure.input(z.string().nullish()).query((req) => {
+    return `hello ${req.input}`
+  }),
   createTodo: t.procedure.input(createTodoPayload).query(({ input }) => {
     createTodo(input);
   }),
@@ -50,8 +49,8 @@ async function server() {
     }),
   );
   app.get("/", (_req, res) => res.send("hello"));
-  app.listen(2021, () => {
-    console.log("listening on port 2021");
+  app.listen(3000, () => {
+    console.log("listening on port 3000");
   });
 }
 

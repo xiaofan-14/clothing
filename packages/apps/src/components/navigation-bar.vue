@@ -1,34 +1,31 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { House, ShoppingCart, Heart, UserRound } from "lucide-vue-next"
-import { useRouter } from "vue-router"
-
-const router = useRouter()
+import { useRouter, useRoute } from "vue-router"
 
 interface Tab {
   id: number
   icon: any
   badge?: number
-  active: boolean
   to: string
 }
 
+const router = useRouter()
+const route = useRoute()
+
 const bottomTabs = ref<Tab[]>([
-  { id: 1, icon: House, active: true, to: '/' },
-  { id: 2, icon: ShoppingCart, badge: 2, active: false, to: '/checkout' },
-  { id: 3, icon: Heart, active: false, to: '/' },
-  { id: 4, icon: UserRound, active: false, to: '/me' },
+  { id: 1, icon: House, to: '/' },
+  { id: 2, icon: ShoppingCart, badge: 2, to: '/checkout' },
+  { id: 3, icon: Heart, to: '/favorites' },
+  { id: 4, icon: UserRound, to: '/me' },
 ])
 
-function setActiveTab(tabId: number) {
-  let to = '/'
-  bottomTabs.value.forEach((tab) => {
-    if (tab.id === tabId)
-      to = tab.to
-    tab.active = tab.id === tabId
-  })
-  router.push(to)
+async function go(to: string) {
+  await router.push(to)
 }
+
+const isActive = (to: string) => computed(() => route.path === to)
+
 </script>
 
 <template>
@@ -36,9 +33,9 @@ function setActiveTab(tabId: number) {
     class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[327px] h-[60px] backdrop-blur-md rounded-full shadow-lg flex items-center justify-around px-4">
     <button v-for="tab in bottomTabs" :key="tab.id"
       class="relative w-10 h-10 flex items-center justify-center rounded-full"
-      :class="tab.active ? 'bg-white/10 text-white' : 'text-gray-400'" @click="setActiveTab(tab.id)">
+      :class="isActive(tab.to).value ? 'bg-black/50 text-white' : 'text-gray-400'" @click="go(tab.to)">
       <!-- 图标 -->
-      <component :is="tab.icon" class="w-6 h-6" />
+      <component :is="tab.icon" :class="isActive(tab.to).value ? 'w-6 h-6 text-red-700' : 'w-6 h-6 text-red-300'" />
 
       <!-- badge -->
       <span v-if="tab.badge"

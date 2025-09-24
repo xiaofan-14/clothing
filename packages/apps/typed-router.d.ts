@@ -23,7 +23,7 @@ declare module 'vue-router/auto-routes' {
     '/checkout': RouteRecordInfo<'/checkout', '/checkout', Record<never, never>, Record<never, never>>,
     '/favorites': RouteRecordInfo<'/favorites', '/favorites', Record<never, never>, Record<never, never>>,
     '/me': RouteRecordInfo<'/me', '/me', Record<never, never>, Record<never, never>>,
-    '/order': RouteRecordInfo<'/order', '/order', Record<never, never>, Record<never, never>>,
+    '/orders': RouteRecordInfo<'/orders', '/orders', Record<never, never>, Record<never, never>>,
     '/signin': RouteRecordInfo<'/signin', '/signin', Record<never, never>, Record<never, never>>,
     '/signup': RouteRecordInfo<'/signup', '/signup', Record<never, never>, Record<never, never>>,
   }
@@ -59,8 +59,8 @@ declare module 'vue-router/auto-routes' {
       routes: '/me'
       views: never
     }
-    'src/pages/order.vue': {
-      routes: '/order'
+    'src/pages/orders.vue': {
+      routes: '/orders'
       views: never
     }
     'src/pages/signin.vue': {

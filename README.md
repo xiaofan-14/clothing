@@ -1,4 +1,7 @@
-my-clothing-store/
+
+## 项目结构
+
+clothing/
 ├── apps/
 │ ├── web/ # 前端 Vue3 应用
 │ │ ├── src/
@@ -35,3 +38,11 @@ my-clothing-store/
 │
 ├── package.json
 └── tsconfig.json # 全局 ts 配置 (设置 paths alias)
+
+## 填充数据库
+
+使用 prisma 填充数据库
+
+```sh
+npx prisma db push
+```

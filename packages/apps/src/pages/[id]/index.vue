@@ -41,7 +41,7 @@ const colors = [
 // Methods
 const goBack = () => {
   // 返回上一页逻辑
-  console.log('Going back...')
+  window.history.back()
 }
 
 const increaseQuantity = () => {

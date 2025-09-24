@@ -33,7 +33,7 @@ function setActiveTab(tabId: number) {
 
 <template>
   <nav
-    class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[327px] h-[60px] bg-[#292526] rounded-full shadow-lg flex items-center justify-around px-4">
+    class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[327px] h-[60px] backdrop-blur-md rounded-full shadow-lg flex items-center justify-around px-4">
     <button v-for="tab in bottomTabs" :key="tab.id"
       class="relative w-10 h-10 flex items-center justify-center rounded-full"
       :class="tab.active ? 'bg-white/10 text-white' : 'text-gray-400'" @click="setActiveTab(tab.id)">

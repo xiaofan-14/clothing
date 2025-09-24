@@ -1,19 +1,6 @@
 import { t } from "../trpc";
 import { z } from 'zod';
 
-// 公共子结构
-const CartItemSchema = z.object({
-  id: z.string(),
-  quantity: z.number().int().min(1),
-  productId: z.string(),
-  product: z.object({   // 查询时顺手带商品信息
-    id: z.string(),
-    name: z.string(),
-    price: z.number(),
-    image: z.string().nullable(),
-  }),
-});
-
 export const cartRouter = t.router({
   /* 1. 获取当前用户购物车（含商品快照） */
   get: t.procedure
@@ -25,7 +12,13 @@ export const cartRouter = t.router({
         where: { userId: input.userId },
         include: {
           items: {
-            include: { product: true },   // 一次性带出商品
+            include: {
+              product: {
+                include: {
+                  category: true
+                }
+              },
+            },   // 一次性带出商品
           },
         },
       });

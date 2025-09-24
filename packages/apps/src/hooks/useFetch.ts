@@ -6,7 +6,7 @@ type fetchOptions = Omit<RequestInit, 'body' | 'method'> & {
 
 export async function useFetch<T>(path: string, options: fetchOptions = {}): Promise<T> {
   const baseUrl = import.meta.env.VITE_API_BASE_URL
-  let url = `${baseUrl}${path}`
+  let url = `${baseUrl}/trpc${path}`
 
   const { method = 'GET', body, query, headers = {}, ...rest } = options
 

@@ -56,8 +56,8 @@ model Product {
   image       String? // 商品图片 URL
   createdAt   DateTime @default(now()) // 上架时间
 
-  categoryId String // 分类 ID
-  category   Category @relation(fields: [categoryId], references: [id]) // 所属分类
+  categoryId String? // 分类 ID
+  category   Category? @relation(fields: [categoryId], references: [id]) // 所属分类
 
   cartItems  CartItem[] // 购物车项
   orderItems OrderItem[] // 订单项

@@ -22,14 +22,12 @@ const { data: remoteList } = useQuery({
   queryFn: () => useFetch<Category[]>('/category.getlist'),
 });
 
-/* 2. 计算属性：把后端字段拼上图标 */
 const categories = computed(() =>
   (remoteList.value || []).map(item => ({
     ...item,
     icon: markRaw(categoryIconMap[item.name] ?? All),
   }))
 );
-
 </script>
 
 <template>

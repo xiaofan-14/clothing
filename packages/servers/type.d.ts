@@ -1,5 +1,9 @@
-import type { Category } from '@prisma/client'
+import type {
+  Category,
+  Product
+} from '@prisma/client'
 
 export {
-  Category
+  Category,
+  Product
 }

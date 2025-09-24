@@ -15,10 +15,11 @@ export interface ProductClient extends Product {
   }
 }
 
-const { data: remoteList } =  useQuery({
-  queryKey: ['product'],
+const { data: list } = useQuery({
+  queryKey: ['product', 'list'],
   queryFn: () => useFetch<ProductClient[]>('/product.getlist'),
 });
+
 </script>
 
 <template>
@@ -27,7 +28,7 @@ const { data: remoteList } =  useQuery({
   <CategoryTabs />
   <div class="px-4 py-4">
     <div class="grid grid-cols-2 gap-4">
-      <ProductCard v-for="item in remoteList" :key="item.id" :product="item" />
+      <ProductCard v-if="list" :products="list" />
     </div>
   </div>
   <navigation-bar />

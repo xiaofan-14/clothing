@@ -11,66 +11,52 @@ import {
   UserPlus,
 } from "lucide-vue-next"
 import { Google, Apple, Wechat } from "@/components/icons"
+import { useMutation } from "@tanstack/vue-query"
+import { trpc } from "@/lib/trpc"
+import { useToast } from "@/composables/useToast"
+import { useCookie } from "@/composables/useCookie"
 
 const BACKGROUND_URL = new URL(bg, import.meta.url).href
-const registerRoute = "/register"
 
 const router = useRouter()
+const { toast } = useToast()
+const cookie = useCookie<string>('token')
 
 // 表单状态
 const form = reactive({
-  account: "", // 邮箱或手机号
+  phone: "",
   password: "",
-  remember: true,
+})
+
+const { mutate, isPending } = useMutation({
+  mutationFn: async () => await trpc.auth.signin.mutate(form),
+  onSuccess: (data) => {
+    cookie.set(data.token, { days: 7 })
+    toast('登录成功', 'success')
+    router.push('/')
+  },
+  onError: (err) => {
+    toast(`登录失败 ${err.message}`, 'error')
+  }
 })
 
 const showPassword = ref(false)
-const loading = ref(false)
-const error = ref("")
 
 // 简单校验
 const isValid = computed(() => {
-  return form.account.trim().length > 0 && form.password.length >= 6
+  return form.phone.trim().length > 0 && form.password.length >= 6
 })
 
 function toggleShow() {
   showPassword.value = !showPassword.value
 }
 
-async function onSubmit() {
-  error.value = ""
-  if (!isValid.value) {
-    error.value = "请填写账号并保证密码不少于 6 位。"
-    return
-  }
-  loading.value = true
-  try {
-    // === 在这里调用你的登录接口 ===
-    // await auth.login({ account: form.account, password: form.password, remember: form.remember })
-
-    // 模拟延迟
-    await new Promise((r) => setTimeout(r, 800))
-
-    // 登录成功后跳转 (示例)
-    router.push({ path: "/" })
-  } catch (e: any) {
-    // 根据后端返回设置友好错误
-    error.value = e?.message || "登录失败，请重试。"
-  } finally {
-    loading.value = false
-  }
-}
-
 function gotoRegister() {
-  router.push({ path: registerRoute })
+  router.push('/signup')
 }
 
-/** 第三方登录占位函数：在这里接入 OAuth 流程 */
-function oauthLogin(provider: "github" | "google" | "wechat") {
-  // 示例：打开 OAuth 跳转
-  // window.location.href = `/api/oauth/${provider}/redirect`
-  // 这里我们只展示交互
-  alert(`trigger OAuth flow: ${provider}`)
+function onSignin() {
+  mutate()
 }
 </script>
 
@@ -88,11 +74,11 @@ function oauthLogin(provider: "github" | "google" | "wechat") {
         <label class="block">
           <div class="flex items-center text-sm mb-2">
             <Mail class="w-4 h-4 mr-2" />
-            账号（邮箱或手机号）
+            手机号
           </div>
-          <input v-model="form.account" type="text" autocomplete="username"
+          <input v-model="form.phone" type="text" autocomplete="phone"
             class="w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-none transition"
-            placeholder="请输入邮箱或手机号" />
+            placeholder="请输入手机号" />
         </label>
 
         <!-- password -->
@@ -115,11 +101,11 @@ function oauthLogin(provider: "github" | "google" | "wechat") {
 
         <!-- submit -->
         <div class="flex flex-col gap-3">
-          <button :disabled="!isValid || loading"
+          <button :disabled="!isValid"
             class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-full text-white bg-[#483028] disabled:opacity-50 disabled:cursor-not-allowed"
-            type="submit">
+            @click.prevent="onSignin">
             <LogIn class="w-4 h-4" />
-            <span v-if="!loading">登录</span>
+            <span v-if="!isPending">登录</span>
             <span v-else>登录中...</span>
           </button>
         </div>

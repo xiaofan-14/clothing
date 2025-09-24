@@ -21,6 +21,9 @@ importers:
 
   packages/apps:
     dependencies:
+      '@colonel-sandvich/trpc-vue-query':
+        specifier: ^0.8.0
+        version: 0.8.0(@tanstack/vue-query@5.90.2(vue@3.5.21(typescript@5.8.3)))(@trpc/client@11.5.1(@trpc/server@11.5.1(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.5.1(typescript@5.8.3))(typescript@5.8.3)(vue@3.5.21(typescript@5.8.3))
       '@tailwindcss/vite':
         specifier: ^4.1.13
         version: 4.1.13(rolldown-vite@7.1.12(@types/node@24.5.2)(jiti@2.6.0)(yaml@2.8.1))
@@ -129,6 +132,15 @@ packages:
   '@babel/types@7.28.4':
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
+
+  '@colonel-sandvich/trpc-vue-query@0.8.0':
+    resolution: {integrity: sha512-Lclw7SOAgKxKKBWvTqNaCVSqPcW1EmgwMv6yqPhEcUxGfgmNIRpJIcEDqQd5SqXPmfFBoi0xyY8YgmgNQJapDg==}
+    peerDependencies:
+      '@tanstack/vue-query': ^5.32.0
+      '@trpc/client': ^11.0.0-rc.824
+      '@trpc/server': ^11.0.0-rc.824
+      typescript: ^5.8.2
+      vue: ^3.5.13
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -1379,6 +1391,14 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@colonel-sandvich/trpc-vue-query@0.8.0(@tanstack/vue-query@5.90.2(vue@3.5.21(typescript@5.8.3)))(@trpc/client@11.5.1(@trpc/server@11.5.1(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.5.1(typescript@5.8.3))(typescript@5.8.3)(vue@3.5.21(typescript@5.8.3))':
+    dependencies:
+      '@tanstack/vue-query': 5.90.2(vue@3.5.21(typescript@5.8.3))
+      '@trpc/client': 11.5.1(@trpc/server@11.5.1(typescript@5.8.3))(typescript@5.8.3)
+      '@trpc/server': 11.5.1(typescript@5.8.3)
+      typescript: 5.8.3
+      vue: 3.5.21(typescript@5.8.3)
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:

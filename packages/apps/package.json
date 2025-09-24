@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@colonel-sandvich/trpc-vue-query": "^0.8.0",
     "@tailwindcss/vite": "^4.1.13",
     "@tanstack/vue-query": "^5.90.2",
     "@trpc/client": "^11.5.1",

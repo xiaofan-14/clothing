@@ -9,14 +9,3 @@ createApp(App)
   .use(router)
   .mount("#app");
 
-
-// app.use(VueQueryPlugin);
-// app.use(trpc, {
-//   client: new TRPCUntypedClient({
-//     links: [
-//       httpBatchLink({
-//         url: "http://localhost:3000/trpc",
-//       }),
-//     ],
-//   }),
-// });

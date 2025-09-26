@@ -62,12 +62,4 @@ export const authRouter = t.router({
 
       return { user, token };
     }),
-  me: t.procedure
-    .input(z.void())
-    .query(async ({ ctx }) => {
-      if (!ctx.user) {
-        throw new Error('未登录')
-      }
-      return ctx.user
-    }),
 });

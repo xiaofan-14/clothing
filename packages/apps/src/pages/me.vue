@@ -66,7 +66,7 @@ onMounted(async () => {
       </div>
       <div class="ml-auto">
         <button class="text-sm text-gray-700 hover:underline">
-          编辑资料
+
         </button>
       </div>
     </div>

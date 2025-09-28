@@ -52,8 +52,6 @@ const products = computed(() => {
     return temp.filter(e => e.category.name === active.value)
   }
 })
-console.log(products);
-
 </script>
 
 <template>

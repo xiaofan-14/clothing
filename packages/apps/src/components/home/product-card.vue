@@ -2,18 +2,10 @@
 import { Heart, Star } from "lucide-vue-next"
 import { useRouter } from "vue-router";
 import { url } from "@/utils/url";
-import type { Product } from "@clothing/servers/type";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { trpc } from "@/lib/trpc";
 import { useAuthStore } from "@/stores/auth";
-
-type ProductExt = Product & {
-  category: {
-    id: string,
-    name: string
-  }
-  isFavorite?: boolean
-}
+import type { ProductExt } from "@/type";
 
 const { products: list } = defineProps<{ products: ProductExt[] }>()
 
@@ -75,7 +67,6 @@ function star(productId: string) {
   <div v-else v-for="product in list" :key="product.id">
     <div @click="toDetail(product.id)" class="overflow-hidden transition-shadow cursor-pointer">
       <div class="relative aspect-[3/4] bg-gradient-to-br">
-          {{ product.isFavorite }}
         <img :src="url(product.image!)" :alt="product.name" class="w-full h-full object-cover rounded-3xl" />
         <button class="absolute top-3 right-3 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
           <Heart class="w-4 h-4 cursor-pointer transition"

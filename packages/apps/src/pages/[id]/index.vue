@@ -9,22 +9,23 @@ import {
   ShoppingCartIcon,
 } from 'lucide-vue-next'
 import { useRoute } from "vue-router";
-import { useMutation, useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { url } from "@/utils/url";
 import { useRouter } from 'vue-router';
 import { useToast } from '@/composables/useToast';
 import { trpc } from '@/lib/trpc';
-import type { Product } from '@clothing/servers/type';
 import { useAuthStore } from '@/stores/auth';
+import type { ProductExt } from '@/type';
 
 const route = useRoute();
 const router = useRouter()
-const { toast } = useToast()
 const authStore = useAuthStore()
+const { toast } = useToast()
 
+const user = authStore.user!
 const id = route.params.id as string
 
-const { data } = useQuery<Product>({
+const { data } = useQuery({
   queryKey: ['product', id],
   queryFn: async () => {
     const product = await trpc.product.getById.query({ id: id });
@@ -32,10 +33,10 @@ const { data } = useQuery<Product>({
     return {
       ...product,
       createdAt: new Date(product.createdAt as string),
-    };
+    } as ProductExt;
   },
   enabled: !!id
-});
+})
 
 const { mutate } = useMutation({
   mutationFn: async (data: { productId: string; quantity: number; userId: string }) =>
@@ -51,6 +52,7 @@ const { mutate } = useMutation({
 const quantity = ref(1)
 const selectedSize = ref('L')
 const selectedColor = ref('gray')
+const queryClient = useQueryClient()
 
 const sizes = ['S', 'M', 'L', 'XL']
 const colors = [
@@ -58,6 +60,18 @@ const colors = [
   { name: 'brown', value: '#8B4513' },
   { name: 'black', value: '#111827' }
 ] as Array<{ name: string; value: string }>
+
+const toggleFavorite = useMutation({
+  mutationFn: async (id: string) => await trpc.favorite.toggle.mutate({
+    userId: user.id,
+    productId: id
+  }),
+  onSuccess: () => {
+    queryClient.setQueryData<ProductExt | undefined>(['product', id],
+      old => old ? { ...old, isFavorite: !old.isFavorite } : old
+    )
+  },
+})
 
 function goBack() {
   router.back()
@@ -90,6 +104,10 @@ function addToCart() {
 
   mutate(payload)
 }
+
+function star(productId: string) {
+  toggleFavorite.mutate(productId)
+}
 </script>
 
 <template>
@@ -105,7 +123,8 @@ function addToCart() {
             <ChevronLeftIcon class="w-6 h-6 text-gray-700" />
           </button>
           <button class="bg-white w-10 h-10 flex items-center justify-center rounded-full">
-            <HeartIcon class="w-6 h-6 text-gray-700" />
+            <HeartIcon class="w-6 h-6 cursor-pointer transition"
+              :class="data.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'" @click.stop="star(data.id)" />
           </button>
         </div>
         <div class="w-full h-full overflow-hidden">

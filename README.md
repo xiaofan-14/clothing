@@ -40,16 +40,28 @@ clothing/
 └── tsconfig.json # 全局 ts 配置 (设置 paths alias)
 ~~~
 
+## 配置数据库
+
+在 `packages\servers\.env` 文件中配置数据库连接字符串 
+
 ## 填充数据库
 
-使用 prisma 填充数据库
+在 `packages\servers` 目录下打开终端 运行
+
+> 使用 prisma 填充数据库，自动创建表和表结构
 
 ```sh
 npx prisma db push
 ```
 
-生成类型
+> 生成类型
 
 ```sh
 npx prisma generate
+```
+
+> 运行种子文件
+
+```sh
+npx prisma db seed
 ```

@@ -4,9 +4,10 @@ import cors from "cors";
 import path from "path";
 import { appRouter } from "./src/routers";
 import { createContext } from './src/trpc';
-import { PrismaClient } from "@prisma/client";
+import { fileURLToPath } from "url";
 
-const prisma = new PrismaClient();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function server() {
   const app = express();

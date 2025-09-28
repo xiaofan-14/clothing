@@ -14,8 +14,6 @@ export const authRouter = t.router({
         password: z.string().min(6),
       }))
     .mutation(async ({ input, ctx }) => {
-      console.log(input);
-
       const { phone, name, password } = input
       const existingUser = await ctx.db.user.findUnique({ where: { phone } });
       if (existingUser) {

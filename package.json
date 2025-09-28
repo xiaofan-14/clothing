@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:server": "pnpm --filter @clothing/servers dev",
+    "dev:app": "pnpm --filter @clothing/apps dev"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +16,10 @@
   },
   "devDependencies": {
     "prettier": "3.6.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@7.1.12"
+    }
   }
 }

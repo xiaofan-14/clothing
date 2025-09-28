@@ -41,9 +41,9 @@ const categories = computed(() =>
         <component :is="All" class="w-4 h-4" :stroke="active === 'all' ? 'white' : '#292526'" />
         <span class="text-sm">全部</span>
       </button>
-      <button v-for="item in categories" :key="item.id" @click="setActiveCategory(item.id)" :class="[
+      <button v-for="item in categories" :key="item.id" @click="setActiveCategory(item.name)" :class="[
         'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap',
-        active === item.id
+        active === item.name
           ? 'bg-gray-900 text-white'
           : 'text-gray-600 hover:bg-gray-200 border-gray-200 border',
       ]">

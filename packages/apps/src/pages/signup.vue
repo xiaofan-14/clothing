@@ -30,13 +30,8 @@ const form = reactive({
   password: "",
 })
 
-const { mutate, isPending } = useMutation({
+const { mutateAsync, isPending } = useMutation({
   mutationFn: async () => await trpc.auth.signup.mutate(form),
-  onSuccess: (data) => {
-    authStore.setAuth(data.token, data.user as unknown as User)
-    toast('注册成功', 'success')
-    router.push('/')
-  },
   onError: (err) => {
     toast(`注册失败 ${err.message}`, 'error')
   }
@@ -53,12 +48,15 @@ function toggleShow() {
   showPassword.value = !showPassword.value
 }
 
-function gotoRegister() {
+function go() {
   router.push('/signin')
 }
 
-function onSignup() {
-  mutate()
+async function onSignup() {
+  const data = await mutateAsync()
+  authStore.setAuth(data.token, data.user as unknown as User)
+  toast('注册成功', 'success')
+  router.push('/')
 }
 </script>
 
@@ -113,7 +111,7 @@ function onSignup() {
         <div class="flex flex-col gap-3 mt-4">
           <button :disabled="!isValid"
             class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-full text-white bg-[#483028] disabled:opacity-50 disabled:cursor-not-allowed"
-            @click="onSignup">
+            @click.prevent="onSignup">
             <UserPlus class="w-4 h-4" />
             <span v-if="!isPending">注册</span>
             <span v-else>注册中...</span>
@@ -128,7 +126,7 @@ function onSignup() {
           <div class="flex-1 h-px bg-gray-200"></div>
         </div>
 
-        <button class="mt-4 w-full px-4 rounded-lg" @click="gotoRegister">
+        <button class="mt-4 w-full px-4 rounded-lg" @click="go">
           <div class="flex items-center justify-center gap-2">
             <LogIn class="w-4 h-4" />
             <span>登录</span>

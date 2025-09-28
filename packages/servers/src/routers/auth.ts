@@ -14,8 +14,6 @@ export const authRouter = t.router({
         password: z.string().min(6),
       }))
     .mutation(async ({ input, ctx }) => {
-      console.log(input);
-
       const { phone, name, password } = input
       const existingUser = await ctx.db.user.findUnique({ where: { phone } });
       if (existingUser) {
@@ -61,13 +59,5 @@ export const authRouter = t.router({
       const token = jwt.sign({ userId: user.id }, JWT_SECRET!, { expiresIn: "7d" });
 
       return { user, token };
-    }),
-  me: t.procedure
-    .input(z.void())
-    .query(async ({ ctx }) => {
-      if (!ctx.user) {
-        throw new Error('未登录')
-      }
-      return ctx.user
-    }),
+    })
 });

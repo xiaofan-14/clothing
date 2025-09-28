@@ -15,13 +15,12 @@ type ProductExt = Product & {
   isFavorite?: boolean
 }
 
-const { products } = defineProps<{ products: Product[] }>()
+const { products: list } = defineProps<{ products: ProductExt[] }>()
 
 const router = useRouter();
 const auth = useAuthStore()
 
 const user = auth.user!
-const list = products as ProductExt[]
 
 const queryClient = useQueryClient()
 
@@ -30,13 +29,35 @@ const toggleFavorite = useMutation({
     userId: user.id,
     productId: id
   }),
-  onSuccess: () => {
-    // 1. 商品列表（带收藏状态）
+  onMutate: async (id: string) => {
+    // 取消正在进行的请求，避免覆盖
+    await queryClient.cancelQueries({ queryKey: ['product', 'byCategory'] })
+
+    // 本地更新缓存
+    const previous = queryClient.getQueryData<ProductExt[]>(['product', 'byCategory'])
+
+    if (previous) {
+      queryClient.setQueryData<ProductExt[]>(['product', 'byCategory'], old =>
+        old?.map(p =>
+          p.id === id ? { ...p, isFavorite: !p.isFavorite } : p
+        ) ?? []
+      )
+    }
+
+    return { previous }
+  },
+  onError: (_err, _id, context) => {
+    // 出错回滚
+    if (context?.previous) {
+      queryClient.setQueryData(['product', 'byCategory'], context.previous)
+    }
+  },
+  onSettled: () => {
     queryClient.invalidateQueries({ queryKey: ['product', 'byCategory'] })
-    // 2. 我的收藏列表
     queryClient.invalidateQueries({ queryKey: ['favorite', 'list'] })
   }
 })
+
 
 function toDetail(id: string) {
   router.push(`/${id}`);
@@ -54,6 +75,7 @@ function star(productId: string) {
   <div v-else v-for="product in list" :key="product.id">
     <div @click="toDetail(product.id)" class="overflow-hidden transition-shadow cursor-pointer">
       <div class="relative aspect-[3/4] bg-gradient-to-br">
+          {{ product.isFavorite }}
         <img :src="url(product.image!)" :alt="product.name" class="w-full h-full object-cover rounded-3xl" />
         <button class="absolute top-3 right-3 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
           <Heart class="w-4 h-4 cursor-pointer transition"

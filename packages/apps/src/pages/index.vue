@@ -16,42 +16,23 @@ const user = auth.user!
 
 const active = ref('all')
 
-// const fn = user
-//   ? async () => await trpc.product.getlistOnLogin.query({ userId: user.id })
-//   : async () => await trpc.product.getlist.query()
+interface ListType extends Product {
+  category: {
+    id: string,
+    name: string
+  }
+  isFavorite: boolean
+}
 
-// const fn2 = user
-//   ? async () => await trpc.product.getByCategoryOnLogin.query({ categoryId: active.value, userId: user.id })
-//   : async () => await trpc.product.getByCategory.query({ categoryId: active.value })
-
-// const { data: products } = useQuery<Product[]>({
-//   queryKey: ['product', 'byCategory', active],
-//   queryFn: async () => {
-//     const products = active.value === 'all'
-//       ? await fn()
-//       : await fn2()
-//     return products.map(p => ({
-//       ...p,
-//       createdAt: new Date(p.createdAt)
-//     }));
-//   },
-//   enabled: computed(() => !!active.value),
-// })
-
-const { data: products } = useQuery<Product[]>({
-  queryKey: ['product', 'byCategory', active.value, user],
-  queryFn: async ({ queryKey }) => {
-    const [_prefix, _type, categoryId, userId] = queryKey as [string, string, string, string]
+const { data } = useQuery<Product[]>({
+  queryKey: ['product', 'byCategory'],
+  queryFn: async () => {
 
     let products
-    if (categoryId === 'all') {
-      products = user
-        ? await trpc.product.getlistOnLogin.query({ userId: user.id })
-        : await trpc.product.getlist.query()
+    if (user.name) {
+      products = await trpc.product.getlist.query({})
     } else {
-      products = user
-        ? await trpc.product.getByCategoryOnLogin.query({ categoryId: active.value, userId: user.id })
-        : await trpc.product.getByCategory.query({ categoryId : active.value})
+      products = await trpc.product.getlist.query({ userId: user.id })
     }
 
     return products.map(p => ({
@@ -59,8 +40,19 @@ const { data: products } = useQuery<Product[]>({
       createdAt: new Date(p.createdAt),
     }))
   },
-  enabled: () => !!active.value,
 })
+
+const products = computed(() => {
+  const temp = data.value as ListType[]
+  if (!temp) return []
+
+  if (active.value === 'all') {
+    return temp
+  } else {
+    return temp.filter(e => e.category.name === active.value)
+  }
+})
+console.log(products);
 
 </script>
 
@@ -70,7 +62,7 @@ const { data: products } = useQuery<Product[]>({
   <CategoryTabs v-model:active="active" />
   <div class="px-4 py-4">
     <div class="grid grid-cols-2 gap-4">
-      <ProductCard v-if="products" :products="products" />
+      <ProductCard v-if="products.length > 0" :products="products" />
     </div>
   </div>
   <navigation-bar />

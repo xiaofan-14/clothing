@@ -3,9 +3,7 @@ import { onMounted, ref } from "vue"
 import {
   User,
   Package,
-  Ticket,
   Heart,
-  MapPin,
   MessageCircle,
   Settings,
   ChevronRight,
@@ -18,19 +16,18 @@ const router = useRouter()
 
 const user = ref({
   name: "",
+  phone: "",
   level: "VIP 2",
 })
 
 const features = [
   { id: "orders", name: "我的订单", icon: Package, to: "/orders" },
-  { id: "coupon", name: "优惠券", icon: Ticket, to: "#" },
   { id: "favorite", name: "收藏夹", icon: Heart, to: "/favorites" },
-  { id: "address", name: "收货地址", icon: MapPin, to: "#" },
 ]
 
 const services = [
-  { id: "support", name: "客服中心", icon: MessageCircle },
-  { id: "settings", name: "设置", icon: Settings },
+  { id: "support", name: "客服中心", icon: MessageCircle, to: "/faq" },
+  { id: "settings", name: "设置", icon: Settings, to: "/settings" },
 ]
 
 function go(to: string) {
@@ -43,6 +40,7 @@ onMounted(async () => {
   if (auth.token) {
     try {
       user.value.name = auth.user!.name
+      user.value.phone = auth.user!.phone
     } catch {
       auth.clearAuth()
     }
@@ -57,17 +55,17 @@ onMounted(async () => {
       <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
         <User class="w-5 h-5 text-white" />
       </div>
-      <div>
+      <div class="flex-1">
         <template v-if="user.name">
-          <p class="font-semibold text-lg">{{ user.name }}</p>
-          <p class="text-sm text-gray-500">{{ user.level }}</p>
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="font-semibold text-lg">{{ user.name }}</p>
+              <p class="text-sm text-gray-500">{{ user.phone }}</p>
+            </div>
+            <p class="text-sm text-gray-500">{{ user.level }}</p>
+          </div>
         </template>
         <p v-else class="text-md" @click="go('/signin')">登录</p>
-      </div>
-      <div class="ml-auto">
-        <button @click="go('/profile')" class="text-sm text-gray-700 border border-gray-500 bg-gray-50 p-2 rounded-full hover:underline">
-          编辑资料
-        </button>
       </div>
     </div>
 
@@ -85,7 +83,7 @@ onMounted(async () => {
 
     <!-- 服务 -->
     <div class="mt-4 bg-white rounded-lg divide-y divide-gray-300 mx-4">
-      <button v-for="s in services" :key="s.id"
+      <button v-for="s in services" :key="s.id" @click="go(s.to)"
         class="flex items-center justify-between px-4 py-3 w-full text-left hover:bg-gray-50">
         <div class="flex items-center gap-3">
           <component :is="s.icon" class="w-5 h-5 text-slate-500" />

@@ -16,11 +16,14 @@ router.beforeEach(async (_to, _from, next) => {
 
   const user = auth.user!
 
-  if (!user && _to.path === '/favorites') {
+  const protectedRoutes = ['/favorites', '/orders', '/checkout']
+
+  if (!user && protectedRoutes.includes(_to.path)) {
     toast('请先登录', 'info')
     next('/signin')
     return
   }
+
 
 
   next();

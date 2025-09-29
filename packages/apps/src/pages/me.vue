@@ -26,7 +26,7 @@ const features = [
 ]
 
 const services = [
-  { id: "support", name: "客服中心", icon: MessageCircle, to: "/faq" },
+  { id: "support", name: "常见问题", icon: MessageCircle, to: "/faq" },
   { id: "settings", name: "设置", icon: Settings, to: "/settings" },
 ]
 

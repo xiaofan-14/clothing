@@ -9,12 +9,14 @@ import type { Product } from '@clothing/servers/type'
 import { computed, ref } from "vue";
 import { trpc } from "@/lib/trpc";
 import { useAuthStore } from "@/stores/auth";
+import { useToast } from "@/composables/useToast";
 
 const auth = useAuthStore()
-
+const { toast } = useToast()
 const user = auth.user!
 
 const active = ref('all')
+const keyword = ref('')
 
 interface ListType extends Product {
   category: {
@@ -46,17 +48,32 @@ const products = computed(() => {
   const temp = data.value as ListType[]
   if (!temp) return []
 
-  if (active.value === 'all') {
-    return temp
-  } else {
-    return temp.filter(e => e.category.name === active.value)
+  // 分类过滤
+  let result =
+    active.value === "all"
+      ? temp
+      : temp.filter(e => e.category.name === active.value)
+
+  // 关键字过滤逻辑
+  if (keyword.value.trim()) {
+    const filtered = result.filter(e =>
+      e.name.toLowerCase().includes(keyword.value.toLowerCase())
+    )
+    if (filtered.length === 0) {
+      toast("没有找到这个商品")
+      return result // 没找到，回退到分类数据
+    }
+    return filtered // 找到，返回过滤结果
   }
+
+  return result
 })
+
 </script>
 
 <template>
   <HeaderBar />
-  <SearchBar />
+  <SearchBar v-model:keyword="keyword" />
   <CategoryTabs v-model:active="active" />
   <div class="px-4 py-4">
     <div class="grid grid-cols-2 gap-4">

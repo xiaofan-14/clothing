@@ -87,4 +87,5 @@ function star(productId: string) {
       </div>
     </div>
   </div>
+  <div class="mt-6" />
 </template>

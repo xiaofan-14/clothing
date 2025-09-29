@@ -65,8 +65,8 @@ onMounted(async () => {
         <p v-else class="text-md" @click="go('/signin')">登录</p>
       </div>
       <div class="ml-auto">
-        <button class="text-sm text-gray-700 hover:underline">
-
+        <button @click="go('/profile')" class="text-sm text-gray-700 border border-gray-500 bg-gray-50 p-2 rounded-full hover:underline">
+          编辑资料
         </button>
       </div>
     </div>

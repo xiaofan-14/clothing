@@ -59,5 +59,39 @@ export const authRouter = t.router({
       const token = jwt.sign({ userId: user.id }, JWT_SECRET!, { expiresIn: "7d" });
 
       return { user, token };
+    }),
+
+  me: t.procedure
+    .input(z.object({
+      userId: z.string()
+    })).query(async ({ ctx, input }) => {
+      return await ctx.db.user.findFirst({
+        where: { id: input.userId }
+      })
+    }),
+
+  update: t.procedure
+    .input(
+      z.object({
+        userId: z.string(),
+        name: z.string().min(1, "用户名不能为空"),
+        phone: z.string().regex(/^1[3-9]\d{9}$/, "手机号格式不正确"),
+        password: z.string().min(6, "密码至少6位").optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const dataToUpdate: any = {
+        name: input.name,
+        phone: input.phone,
+      }
+
+      if (input.password && input.password.trim() !== "") {
+        dataToUpdate.password = await bcrypt.hash(input.password, 10)
+      }
+
+      return await ctx.db.user.update({
+        where: { id: input.userId },
+        data: dataToUpdate,
+      })
     })
 });

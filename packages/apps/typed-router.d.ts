@@ -24,6 +24,7 @@ declare module 'vue-router/auto-routes' {
     '/favorites': RouteRecordInfo<'/favorites', '/favorites', Record<never, never>, Record<never, never>>,
     '/me': RouteRecordInfo<'/me', '/me', Record<never, never>, Record<never, never>>,
     '/orders': RouteRecordInfo<'/orders', '/orders', Record<never, never>, Record<never, never>>,
+    '/profile': RouteRecordInfo<'/profile', '/profile', Record<never, never>, Record<never, never>>,
     '/signin': RouteRecordInfo<'/signin', '/signin', Record<never, never>, Record<never, never>>,
     '/signup': RouteRecordInfo<'/signup', '/signup', Record<never, never>, Record<never, never>>,
   }
@@ -61,6 +62,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/orders.vue': {
       routes: '/orders'
+      views: never
+    }
+    'src/pages/profile.vue': {
+      routes: '/profile'
       views: never
     }
     'src/pages/signin.vue': {

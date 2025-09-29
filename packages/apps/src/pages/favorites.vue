@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc"
 import { useAuthStore } from "@/stores/auth"
 import { useQuery } from "@tanstack/vue-query"
 import { computed, type Ref } from "vue"
-import type { Product } from "@clothing/servers/type"
+import type { ProductExt } from "@/type"
 
 const auth = useAuthStore()
 const user = auth.user!
@@ -15,7 +15,7 @@ const { data, isLoading } = useQuery({
   queryFn: async () => await trpc.favorite.list.query({ userId: user.id, limit: 20 }),
 })
 
-const favorites = computed(() => data.value?.items ?? []) as unknown as Ref<Product[]>
+const favorites = computed(() => data.value?.items ?? []) as unknown as Ref<ProductExt[]>
 </script>
 
 <template>

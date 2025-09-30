@@ -36,7 +36,7 @@ export const productRouter = t.router({
     }))
     .query(async ({ input, ctx }) => {
       const { id, userId } = input
-      if (userId !== undefined && userId !== null) {
+      if (userId === undefined || userId === null) {
         return await ctx.db.product.findFirst({
           where: { id },
           include: { category: { select: { id: true, name: true, } } }
